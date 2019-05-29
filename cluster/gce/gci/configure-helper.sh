@@ -2999,7 +2999,11 @@ function main() {
   elif [[ "${container_runtime}" == "containerd" ]]; then
     # stop docker if it is present as we want to use just containerd
     systemctl stop docker || echo "unable to stop docker"
-    setup-containerd
+    if [[ -e "${KUBE_HOME}/bin/gke-internal-configure-helper.sh" ]]; then
+      gke-setup-containerd
+    else
+      setup-containerd
+    fi
   fi
   start-kubelet
 
