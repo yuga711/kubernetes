@@ -135,6 +135,14 @@ try {
   Configure-Crictl
   Setup-ContainerRuntime
   DownloadAndInstall-AuthPlugin
+
+  # Even if Stackdriver is already installed, the function will still [re]start the service.
+  if (IsLoggingEnabled $kube_env) {
+    Install-LoggingAgent
+    Configure-LoggingAgent
+    Restart-LoggingAgent
+  }
+
   DownloadAndInstall-KubernetesBinaries
   DownloadAndInstall-CSIProxyBinaries
   Start-CSIProxy
@@ -148,12 +156,6 @@ try {
   Configure-GcePdTools
   Configure-Kubelet
 
-  # Even if Stackdriver is already installed, the function will still [re]start the service.
-  if (IsLoggingEnabled $kube_env) {
-    Install-LoggingAgent
-    Configure-LoggingAgent
-    Restart-LoggingAgent
-  }
   # Flush cache to disk before starting kubelet & kube-proxy services
   # to make metadata server route and stackdriver service more persistent.
   Write-Volumecache C -PassThru
