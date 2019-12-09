@@ -40,11 +40,6 @@ type ContainerRuntimeOptions struct {
 	// but less secure because the connection between apiserver and container runtime is not
 	// authenticated.
 	RedirectContainerStreaming bool
-	// GVisorNodeMode enables gvisor node mode. In this mode, kubelet rejects exec/attach to
-	// non-gvisor pods.
-	// TODO(b/113282521): Remove this mode and allow exec/attach into non-gvisor pods after
-	// XEMU is open sourced.
-	GVisorNodeMode bool
 
 	// Docker-specific options.
 
@@ -90,7 +85,6 @@ func (s *ContainerRuntimeOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.StringVar(&s.RuntimeCgroups, "runtime-cgroups", s.RuntimeCgroups, "Optional absolute name of cgroups to create and run the runtime in.")
 	fs.BoolVar(&s.RedirectContainerStreaming, "redirect-container-streaming", s.RedirectContainerStreaming, "Enables container streaming redirect. If false, kubelet will proxy container streaming data between apiserver and container runtime; if true, kubelet will return an http redirect to apiserver, and apiserver will access container runtime directly. The proxy approach is more secure, but introduces some overhead. The redirect approach is more performant, but less secure because the connection between apiserver and container runtime may not be authenticated.")
 	fs.MarkDeprecated("redirect-container-streaming", "Container streaming redirection will be removed from the kubelet in v1.20, and this flag will be removed in v1.22. For more details, see http://git.k8s.io/enhancements/keps/sig-node/20191205-container-streaming-requests.md")
-	fs.BoolVar(&s.GVisorNodeMode, "gvisor-node-mode", s.GVisorNodeMode, "Enables gvisor node mode. In this mode, kubelet rejects exec/attach to non-gvisor pods.")
 
 	// Docker-specific settings.
 	fs.StringVar(&s.DockershimRootDirectory, "experimental-dockershim-root-directory", s.DockershimRootDirectory, "Path to the dockershim root directory.")
