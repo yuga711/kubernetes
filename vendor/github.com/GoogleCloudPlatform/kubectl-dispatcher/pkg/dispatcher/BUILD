@@ -14,7 +14,7 @@ go_library(
         "//vendor/github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/filepath:go_default_library",
         "//vendor/github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/util:go_default_library",
         "//vendor/github.com/spf13/pflag:go_default_library",
-        "//vendor/k8s.io/klog:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
     ],
 )
 

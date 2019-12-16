@@ -30,7 +30,7 @@ import (
 	utilflag "k8s.io/component-base/cli/flag"
 
 	// klog calls in this file assume it has been initialized beforehand
-	"k8s.io/klog"
+	"k8s.io/klog/v2"
 )
 
 const (
