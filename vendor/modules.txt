@@ -1225,7 +1225,9 @@ go.uber.org/zap/zapcore
 # golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9 => golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
 ## explicit
 # golang.org/x/crypto => golang.org/x/crypto v0.0.0-20200622213623-75b288015ac9
+golang.org/x/crypto/argon2
 golang.org/x/crypto/bcrypt
+golang.org/x/crypto/blake2b
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
 golang.org/x/crypto/cryptobyte
