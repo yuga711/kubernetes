@@ -22,8 +22,8 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/util"
 	"k8s.io/apimachinery/pkg/version"
+	"k8s.io/kubernetes/cmd/kubectl-sdk/pkg/util"
 )
 
 const windowsOS = "windows"

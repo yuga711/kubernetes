@@ -7,12 +7,12 @@ go_library(
     importpath = "k8s.io/kubernetes/cmd/kubectl-sdk",
     visibility = ["//visibility:private"],
     deps = [
+        "//cmd/kubectl-sdk/pkg/dispatcher:go_default_library",
         "//pkg/kubectl/cmd:go_default_library",
         "//staging/src/k8s.io/client-go/pkg/version:go_default_library",
         "//staging/src/k8s.io/client-go/plugin/pkg/client/auth:go_default_library",
         "//staging/src/k8s.io/component-base/cli/flag:go_default_library",
         "//staging/src/k8s.io/kubectl/pkg/util/logs:go_default_library",
-        "//vendor/github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/dispatcher:go_default_library",
         "//vendor/github.com/spf13/pflag:go_default_library",
     ],
 )
@@ -34,7 +34,13 @@ filegroup(
 
 filegroup(
     name = "all-srcs",
-    srcs = [":package-srcs"],
+    srcs = [
+        ":package-srcs",
+        "//cmd/kubectl-sdk/pkg/client:all-srcs",
+        "//cmd/kubectl-sdk/pkg/dispatcher:all-srcs",
+        "//cmd/kubectl-sdk/pkg/filepath:all-srcs",
+        "//cmd/kubectl-sdk/pkg/util:all-srcs",
+    ],
     tags = ["automanaged"],
     visibility = ["//visibility:public"],
 )

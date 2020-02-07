@@ -3,8 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "go_default_library",
     srcs = ["util.go"],
-    importmap = "k8s.io/kubernetes/vendor/github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/util",
-    importpath = "github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/util",
+    importpath = "k8s.io/kubernetes/cmd/kubectl-sdk/pkg/util",
     visibility = ["//visibility:public"],
     deps = ["//staging/src/k8s.io/apimachinery/pkg/version:go_default_library"],
 )

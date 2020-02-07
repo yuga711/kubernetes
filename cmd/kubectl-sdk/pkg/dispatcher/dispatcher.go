@@ -21,13 +21,13 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/client"
-	"github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/filepath"
-	"github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/util"
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/version"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	utilflag "k8s.io/component-base/cli/flag"
+	"k8s.io/kubernetes/cmd/kubectl-sdk/pkg/client"
+	"k8s.io/kubernetes/cmd/kubectl-sdk/pkg/filepath"
+	"k8s.io/kubernetes/cmd/kubectl-sdk/pkg/util"
 
 	// klog calls in this file assume it has been initialized beforehand
 	"k8s.io/klog/v2"

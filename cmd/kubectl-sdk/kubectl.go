@@ -22,11 +22,11 @@ import (
 	"os"
 	"time"
 
-	"github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/dispatcher"
 	"github.com/spf13/pflag"
 
 	cliflag "k8s.io/component-base/cli/flag"
 	"k8s.io/kubectl/pkg/util/logs"
+	"k8s.io/kubernetes/cmd/kubectl-sdk/pkg/dispatcher"
 	"k8s.io/kubernetes/pkg/kubectl/cmd"
 
 	// Import to initialize client auth plugins.

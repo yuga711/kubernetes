@@ -2,15 +2,18 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "go_default_library",
-    srcs = ["client.go"],
-    importmap = "k8s.io/kubernetes/vendor/github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/client",
-    importpath = "github.com/GoogleCloudPlatform/kubectl-dispatcher/pkg/client",
+    srcs = ["dispatcher.go"],
+    importpath = "k8s.io/kubernetes/cmd/kubectl-sdk/pkg/dispatcher",
     visibility = ["//visibility:public"],
     deps = [
+        "//cmd/kubectl-sdk/pkg/client:go_default_library",
+        "//cmd/kubectl-sdk/pkg/filepath:go_default_library",
+        "//cmd/kubectl-sdk/pkg/util:go_default_library",
         "//staging/src/k8s.io/apimachinery/pkg/version:go_default_library",
         "//staging/src/k8s.io/cli-runtime/pkg/genericclioptions:go_default_library",
-        "//staging/src/k8s.io/client-go/discovery:go_default_library",
-        "//staging/src/k8s.io/client-go/rest:go_default_library",
+        "//staging/src/k8s.io/component-base/cli/flag:go_default_library",
+        "//vendor/github.com/spf13/pflag:go_default_library",
+        "//vendor/k8s.io/klog/v2:go_default_library",
     ],
 )
 
