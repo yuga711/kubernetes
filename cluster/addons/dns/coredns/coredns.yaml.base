@@ -127,6 +127,8 @@ spec:
       tolerations:
         - key: "CriticalAddonsOnly"
           operator: "Exists"
+        - key: "components.gke.io/gke-managed-components"
+          operator: "Exists"
       nodeSelector:
         kubernetes.io/os: linux
       containers:

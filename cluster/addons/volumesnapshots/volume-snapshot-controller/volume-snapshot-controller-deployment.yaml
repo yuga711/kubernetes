@@ -25,3 +25,7 @@ spec:
           image: k8s.gcr.io/sig-storage/snapshot-controller:v2.1.1
           args:
             - "--v=5"
+          imagePullPolicy: Always
+      tolerations:
+      - key: components.gke.io/gke-managed-components
+        operator: Exists
