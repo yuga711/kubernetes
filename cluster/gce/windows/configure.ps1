@@ -155,6 +155,8 @@ try {
   Configure-HostDnsConf
   Configure-GcePdTools
   Configure-Kubelet
+  DownloadAndInstall-GKEMetadataServer
+  Start-GKEMetadataServer
 
   # Flush cache to disk before starting kubelet & kube-proxy services
   # to make metadata server route and stackdriver service more persistent.
