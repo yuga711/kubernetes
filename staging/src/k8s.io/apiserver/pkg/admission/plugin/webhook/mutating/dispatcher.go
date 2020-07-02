@@ -55,6 +55,13 @@ const (
 	PatchAuditAnnotationPrefix = "patch.webhook.admission.k8s.io/"
 	// MutationAuditAnnotationPrefix is a prefix for presisting webhook mutation existence in audit annotation.
 	MutationAuditAnnotationPrefix = "mutation.webhook.admission.k8s.io/"
+	// FailureAuditAnnotationPrefix is a prefix for keeping noteworthy
+	// failure audit annotations.
+	FailureAuditAnnotationPrefix = "failure.webhook.admission.k8s.io/"
+	// FailureAuditAnnotationFailedOpenKeySuffix in an annotation indicates
+	// the mutating webhook failed open when the webhook backend connection
+	// failed or returned an internal server error.
+	FailureAuditAnnotationFailedOpenKeySuffix string = "failed-open"
 )
 
 var encodingjson = json.CaseSensitiveJsonIterator()
@@ -168,6 +175,15 @@ func (a *mutatingDispatcher) Dispatch(ctx context.Context, attr admission.Attrib
 		if callErr, ok := err.(*webhookutil.ErrCallingWebhook); ok {
 			if ignoreClientCallFailures {
 				klog.Warningf("Failed calling webhook, failing open %v: %v", hook.Name, callErr)
+
+				key := hook.Name + "." + FailureAuditAnnotationPrefix + FailureAuditAnnotationFailedOpenKeySuffix
+				value := "true"
+				if err := versionedAttr.Attributes.AddAnnotation(key, value); err != nil {
+					// In extreme rare cases, super long `hook.Name` could make the key
+					// exceed annotation key size limit, thus might fail to write the
+					// annotation.
+					klog.Warningf("Failed to set admission audit annotation %s to %s for mutating webhook %s: %v", key, value, hook.Name, err)
+				}
 				utilruntime.HandleError(callErr)
 
 				select {

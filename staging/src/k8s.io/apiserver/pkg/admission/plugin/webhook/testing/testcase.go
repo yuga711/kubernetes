@@ -381,7 +381,7 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 		{
 			Name: "match & fail (but allow because fail open)",
 			Webhooks: []registrationv1.ValidatingWebhook{{
-				Name:                    "internalErr A",
+				Name:                    "internalerr-a",
 				ClientConfig:            ccfgSVC("internalErr"),
 				Rules:                   matchEverythingRules,
 				NamespaceSelector:       &metav1.LabelSelector{},
@@ -389,7 +389,7 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 				FailurePolicy:           &policyIgnore,
 				AdmissionReviewVersions: []string{"v1beta1"},
 			}, {
-				Name:                    "internalErr B",
+				Name:                    "internalerr-b",
 				ClientConfig:            ccfgSVC("internalErr"),
 				Rules:                   matchEverythingRules,
 				NamespaceSelector:       &metav1.LabelSelector{},
@@ -397,7 +397,7 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 				FailurePolicy:           &policyIgnore,
 				AdmissionReviewVersions: []string{"v1beta1"},
 			}, {
-				Name:                    "internalErr C",
+				Name:                    "internalerr-c",
 				ClientConfig:            ccfgSVC("internalErr"),
 				Rules:                   matchEverythingRules,
 				NamespaceSelector:       &metav1.LabelSelector{},
@@ -408,6 +408,11 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 
 			SkipBenchmark: true,
 			ExpectAllow:   true,
+			ExpectAnnotations: map[string]string{
+				"internalerr-a.failure.webhook.admission.k8s.io/failed-open": "true",
+				"internalerr-b.failure.webhook.admission.k8s.io/failed-open": "true",
+				"internalerr-c.failure.webhook.admission.k8s.io/failed-open": "true",
+			},
 		},
 		{
 			Name: "match & fail (but disallow because fail close on nil FailurePolicy)",
@@ -494,7 +499,7 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 		}, {
 			Name: "absent response and fail open",
 			Webhooks: []registrationv1.ValidatingWebhook{{
-				Name:                    "nilResponse",
+				Name:                    "nilresponse",
 				ClientConfig:            ccfgURL("nilResponse"),
 				FailurePolicy:           &policyIgnore,
 				Rules:                   matchEverythingRules,
@@ -502,8 +507,9 @@ func NewNonMutatingTestCases(url *url.URL) []ValidatingTest {
 				ObjectSelector:          &metav1.LabelSelector{},
 				AdmissionReviewVersions: []string{"v1beta1"},
 			}},
-			SkipBenchmark: true,
-			ExpectAllow:   true,
+			SkipBenchmark:     true,
+			ExpectAllow:       true,
+			ExpectAnnotations: map[string]string{"nilresponse.failure.webhook.admission.k8s.io/failed-open": "true"},
 		},
 		{
 			Name: "absent response and fail closed",
