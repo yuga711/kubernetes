@@ -445,8 +445,6 @@ metadata:
 rules:
 - apiGroups:
   - "external.metrics.k8s.io"
-  labels:
-    addonmanager.kubernetes.io/mode: Reconcile
   resources:
   - "*"
   verbs:
