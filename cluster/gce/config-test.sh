@@ -517,6 +517,9 @@ ENABLE_PROMETHEUS_TO_SD=${ENABLE_PROMETHEUS_TO_SD:-true}
 # Optional: [Experiment Only] Run kube-proxy as a DaemonSet if set to true, run as static pods otherwise.
 KUBE_PROXY_DAEMONSET=${KUBE_PROXY_DAEMONSET:-false} # true, false
 
+# Will be passed into the kube-proxy via `--detect-local-mode`
+DETECT_LOCAL_MODE=${DETECT_LOCAL_MODE:-NodeCIDR}
+
 # Optional: Change the kube-proxy implementation. Choices are [iptables, ipvs].
 KUBE_PROXY_MODE=${KUBE_PROXY_MODE:-iptables}
 
