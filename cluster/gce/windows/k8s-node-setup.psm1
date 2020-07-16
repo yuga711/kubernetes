@@ -1935,6 +1935,21 @@ $FLUENTD_CONFIG = @'
   tag kubelet
 </source>
 
+# Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+# Example:
+# I0716 02:08:55.559351    3356 log_spam.go:42] Command line arguments:
+<source>
+  @type tail
+  format multiline
+  multiline_flush_interval 5s
+  format_firstline /^\w\d{4}/
+  format1 /^(?<severity>\w)(?<time>\d{4} [^\s]*)\s+(?<pid>\d+)\s+(?<source>[^ \]]+)\] (?<message>.*)/
+  time_format %m%d %H:%M:%S.%N
+  path /etc/kubernetes/logs/gke-metadata-server/*.log.INFO*
+  pos_file /etc/kubernetes/logs/gcp-gke-metadata-server.log.pos
+  tag gke-metadata-server
+</source>
+
 # Example:
 # I1118 21:26:53.975789       6 proxier.go:1096] Port "nodePort for kube-system/default-http-backend:http" (:31429/tcp) was open before and is still needed
 <source>
