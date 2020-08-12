@@ -55,11 +55,11 @@ var _ = SIGDescribe("Multi-AZ Clusters", func() {
 		// TODO: SkipUnlessDefaultScheduler() // Non-default schedulers might not spread
 	})
 	ginkgo.It("should spread the pods of a service across zones", func() {
-		SpreadServiceOrFail(f, (2*zoneCount)+1, image)
+		SpreadServiceOrFail(f, 10*zoneCount, image)
 	})
 
 	ginkgo.It("should spread the pods of a replication controller across zones", func() {
-		SpreadRCOrFail(f, int32((2*zoneCount)+1), image, []string{"serve-hostname"})
+		SpreadRCOrFail(f, int32(10*zoneCount), image, []string{"serve-hostname"})
 	})
 })
 
@@ -130,6 +130,15 @@ func getZoneNameForNode(node v1.Node) (string, error) {
 		node.Name, v1.LabelZoneFailureDomain)
 }
 
+// getNodeCount returns the number of nodes in this cluster.
+func getNodeCount(c clientset.Interface) (int, error) {
+	nodes, err := c.CoreV1().Nodes().List(context.Background(), metav1.ListOptions{})
+	if err != nil {
+		return 0, fmt.Errorf("Error getting nodes: %w", err)
+	}
+	return len(nodes.Items), nil
+}
+
 // Return the number of zones in which we have nodes in this cluster.
 func getZoneCount(c clientset.Interface) (int, error) {
 	zoneNames, err := e2enode.GetClusterZones(c)
@@ -172,7 +181,35 @@ func checkZoneSpreading(c clientset.Interface, pods *v1.PodList, zoneNames []str
 			maxPodsPerZone = podCount
 		}
 	}
-	gomega.Expect(minPodsPerZone).To(gomega.BeNumerically("~", maxPodsPerZone, 1),
+
+	// In all tests, we schedule 30 pods with zone spreading across three zones.
+	//
+	// The 100 node test uses 99 nodes. With such small clusters, the scoring
+	// phase looks at all nodes to calculate spreading scores, which should
+	// ideally result in a perfect 10/10/10 distribution across all three zones.
+	// However, to account for unreliability in scoring due to external factors
+	// (such as image locality), we allow for a 14/8/8 distribution; hence the
+	// max skew of 6.
+	//
+	// Currently, the 5k test uses 4,998 nodes, which has an adaptive scoring
+	// window size of 11% (see generic_scheduler.go). With 30 pods to schedule,
+	// the first 30% of the nodes get 3 additional pods scheduled compared to the
+	// rest of the cluster. This could potentially result in a pod distribution
+	// of 12/9/9 (skew=3) across three zones. Similar to the 100 node test, to
+	// account for unreliability in scoring, we allow for a 16/7/7 distribution;
+	// hence the max skew of 9.
+	//
+	// This maxSkew calculation is specific to the cluster sizes we test with.
+	// Redo this calculation if the node size changes in the future.
+	var maxSkew int
+	numNodes, err := getNodeCount(c)
+	framework.ExpectNoError(err)
+	if numNodes <= 100 {
+		maxSkew = 6
+	} else {
+		maxSkew = 9
+	}
+	gomega.Expect(minPodsPerZone).To(gomega.BeNumerically("~", maxPodsPerZone, maxSkew),
 		"Pods were not evenly spread across zones.  %d in one zone and %d in another zone",
 		minPodsPerZone, maxPodsPerZone)
 }
