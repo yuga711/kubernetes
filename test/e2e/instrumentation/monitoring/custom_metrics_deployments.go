@@ -265,7 +265,7 @@ func CreateAdapter(namespace, adapterDeploymentFile string) error {
 	if err != nil {
 		return err
 	}
-	stat, err := framework.RunKubectl(namespace, "create", "-f", adapterURL)
+	stat, err := framework.RunKubectl(namespace, "apply", "-f", adapterURL)
 	framework.Logf(stat)
 	return err
 }
