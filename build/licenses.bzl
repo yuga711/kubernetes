@@ -17,40 +17,35 @@
 
 _separator = "================================================================================"
 
-def _header_cmd(pkg_name):
-    return "echo -e '%s\n= %s licensed under: =\n' >> $@" % (_separator, pkg_name)
+def _format_license(host_licenses_dir, pkg_name, read_cmd):
+    dep_license_dir = "%s/%s" % (host_licenses_dir, pkg_name)
+    dep_license_file = "%s/LICENSE" % (dep_license_dir)
+    return ";".join([
+      "mkdir -p %s" % (dep_license_dir),
+      "echo -e '= %s licensed under: =\n' >> %s" % (pkg_name, dep_license_file),
+      "%s > %s" % (read_cmd, dep_license_file),
+    ])
 
-def _footer_cmd():
-    return "echo -e '%s\n' >> $@" % _separator
-
-# Creates a single file named LICENSES containing the licenses of all vendored
-# Go dependencies, glibc, and the Go std library and BoringCrypto / BoringSSL.
+# Creates a file named HOST_LICENSES.tar containing a LICENSES/host/... directory structure 
+# containing licenses of glibc, and the Go std library and BoringCrypto / BoringSSL.
 def gen_licenses(**kwargs):
     srcs = [
-        "//:Godeps/LICENSES",
         "@glibc_src//:debian-copyright",
         "@go_src//file",
     ]
 
-    cmds = ["cat $(location //:Godeps/LICENSES) > $@"]
-
     # If you change this list, also be sure to change build/copy-host-source.sh.
-    cmds.extend([
-        _header_cmd("GNU C Library"),
-        "cat $(location @glibc_src//:debian-copyright) >> $@",
-        _footer_cmd(),
-        _header_cmd("Go standard library"),
-        "tar -Oxf $(location @go_src//file) go/LICENSE >> $@",
-        _footer_cmd(),
-        _header_cmd("Go BoringCrypto library"),
-        "tar -Oxf $(location @go_src//file) go/src/crypto/internal/boring/LICENSE >> $@",
-        _footer_cmd(),
-    ])
+    cmds = [
+        _format_license("LICENSES/host", "glibc",    "cat $(location @glibc_src//:debian-copyright)"),
+        _format_license("LICENSES/host", "go",       "tar -Oxf $(location @go_src//file) go/LICENSE"),
+        _format_license("LICENSES/host", "goboring", "tar -Oxf $(location @go_src//file) go/src/crypto/internal/boring/LICENSE"),
+        "tar -cf $@ --owner=0 --group=0 --numeric-owner LICENSES",
+    ]
 
     native.genrule(
         name = "gen_licenses",
         srcs = srcs,
-        outs = ["LICENSES"],
+        outs = ["HOST_LICENSES.tar"],
         cmd = ";".join(cmds),
         **kwargs
     )

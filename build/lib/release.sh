@@ -214,8 +214,8 @@ function kube::release::package_node_tarballs() {
     cp "${client_bins[@]/#/${LOCAL_OUTPUT_BINPATH}/${platform}/}" \
       "${release_stage}/node/bin/"
 
-    cp "${KUBE_ROOT}/Godeps/LICENSES" "${release_stage}/"
-    cat "${LOCAL_OUTPUT_SUBPATH}/src/HOST_LICENSES" >> "${release_stage}/LICENSES"
+    cp -R "${KUBE_ROOT}/LICENSES" "${release_stage}/"
+    cp -R "${LOCAL_OUTPUT_SUBPATH}/src/LICENSES/host" "${release_stage}/LICENSES/"
 
     cp "${RELEASE_TARS}/kubernetes-src.tar.gz" "${release_stage}/"
 
@@ -287,8 +287,8 @@ function kube::release::package_server_tarballs() {
     cp "${client_bins[@]/#/${LOCAL_OUTPUT_BINPATH}/${platform}/}" \
       "${release_stage}/server/bin/"
 
-    cp "${KUBE_ROOT}/Godeps/LICENSES" "${release_stage}/"
-    cat "${LOCAL_OUTPUT_SUBPATH}/src/HOST_LICENSES" >> "${release_stage}/LICENSES"
+    cp -R "${KUBE_ROOT}/LICENSES" "${release_stage}/"
+    cp -R "${LOCAL_OUTPUT_SUBPATH}/src/LICENSES/host" "${release_stage}/LICENSES/"
 
     cp "${RELEASE_TARS}/kubernetes-src.tar.gz" "${release_stage}/"
 
@@ -578,8 +578,8 @@ EOF
 
   cp -R "${KUBE_ROOT}/docs" "${release_stage}/"
   cp "${KUBE_ROOT}/README.md" "${release_stage}/"
-  cp "${KUBE_ROOT}/Godeps/LICENSES" "${release_stage}/"
-  cat "${LOCAL_OUTPUT_SUBPATH}/src/HOST_LICENSES" >> "${release_stage}/LICENSES"
+  cp -R "${KUBE_ROOT}/LICENSES" "${release_stage}/"
+  cp -R "${LOCAL_OUTPUT_SUBPATH}/src/LICENSES/host" "${release_stage}/LICENSES/"
 
   echo "${KUBE_GIT_VERSION}" > "${release_stage}/version"
 
