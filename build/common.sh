@@ -94,16 +94,21 @@ readonly KUBE_CONTAINER_RSYNC_PORT=8730
 # $1 - server architecture
 kube::build::get_docker_wrapped_binaries() {
   local debian_iptables_version=v12.1.2
-  local go_runner_version=buster-v2.0.1
+  local go_runner_version=20200918_1114_RC0
   ### If you change any of these lists, please also update DOCKERIZED_BINARIES
   ### in build/BUILD. And kube::golang::server_image_targets
   local targets=(
-    "kube-apiserver,${KUBE_BASE_IMAGE_REGISTRY}/go-runner:${go_runner_version}"
-    "kube-controller-manager,${KUBE_BASE_IMAGE_REGISTRY}/go-runner:${go_runner_version}"
-    "kube-scheduler,${KUBE_BASE_IMAGE_REGISTRY}/go-runner:${go_runner_version}"
+    # GKE's boringcrypto-patched binaries require glibc, which is not present
+    # in the OSS `go-runner` image. `go-runner-libc` is based on
+    # `gke-distroless/libc` image with a `go-runner` binary mirrored into google3 from
+    # https://github.com/kubernetes/release/blob/master/images/build/go-runner/go-runner.go
+    # For release history, see: http://rapid/gke_distroless
+    # For source, see: http://google3/cloud/kubernetes/distro/images/base/BUILD
+    "kube-apiserver,gke.gcr.io/gke-distroless/go-runner-libc:${go_runner_version}"
+    "kube-controller-manager,gke.gcr.io/gke-distroless/go-runner-libc:${go_runner_version}"
+    "kube-scheduler,gke.gcr.io/gke-distroless/go-runner-libc:${go_runner_version}"
     "kube-proxy,${KUBE_BASE_IMAGE_REGISTRY}/debian-iptables:${debian_iptables_version}"
   )
-
   echo "${targets[@]}"
 }
 
