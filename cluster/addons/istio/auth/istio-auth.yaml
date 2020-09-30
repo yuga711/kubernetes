@@ -10220,14 +10220,14 @@ metadata:
   labels:
     addonmanager.kubernetes.io/mode: EnsureExists
     k8s-app: istio
-  name: istio-1-6-9-gke-0
+  name: istio-1-6-11-gke-0
   namespace: istio-system
 spec:
   components:
     ingressGateways:
     - enabled: false
       name: istio-ingressgateway
-  revision: istio-169
+  revision: istio-1611
   values:
     global:
       defaultPodDisruptionBudget:
