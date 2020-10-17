@@ -144,7 +144,7 @@ func (s *BuiltInAuthenticationOptions) WithRequestHeader() *BuiltInAuthenticatio
 }
 
 func (s *BuiltInAuthenticationOptions) WithServiceAccounts() *BuiltInAuthenticationOptions {
-	s.ServiceAccounts = &ServiceAccountAuthenticationOptions{Lookup: true}
+	s.ServiceAccounts = &ServiceAccountAuthenticationOptions{Lookup: true, ExtendExpiration: true}
 	return s
 }
 
