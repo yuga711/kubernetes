@@ -594,6 +594,8 @@ func (c serviceAccountTokenControllerStarter) startServiceAccountTokenController
 		serviceaccountcontroller.TokensControllerOptions{
 			TokenGenerator: tokenGenerator,
 			RootCA:         rootCA,
+
+			RedactSystemTokens: ctx.ComponentConfig.TokenController.RedactSystemTokens,
 		},
 	)
 	if err != nil {

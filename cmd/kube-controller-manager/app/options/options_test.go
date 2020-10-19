@@ -149,6 +149,7 @@ var args = []string{
 	"--bind-address=192.168.4.21",
 	"--secure-port=10001",
 	"--concurrent-ttl-after-finished-syncs=8",
+	"--redact-system-tokens=true",
 }
 
 func TestAddFlags(t *testing.T) {
@@ -379,6 +380,11 @@ func TestAddFlags(t *testing.T) {
 				ConcurrentSATokenSyncs: 10,
 			},
 		},
+		TokenController: &TokenControllerOptions{
+			&serviceaccountconfig.TokenControllerConfiguration{
+				RedactSystemTokens: true,
+			},
+		},
 		TTLAfterFinishedController: &TTLAfterFinishedControllerOptions{
 			&ttlafterfinishedconfig.TTLAfterFinishedControllerConfiguration{
 				ConcurrentTTLSyncs: 8,
@@ -606,6 +612,9 @@ func TestApplyTo(t *testing.T) {
 			SAController: serviceaccountconfig.SAControllerConfiguration{
 				ServiceAccountKeyFile:  "/service-account-private-key",
 				ConcurrentSATokenSyncs: 10,
+			},
+			TokenController: serviceaccountconfig.TokenControllerConfiguration{
+				RedactSystemTokens: true,
 			},
 			TTLAfterFinishedController: ttlafterfinishedconfig.TTLAfterFinishedControllerConfiguration{
 				ConcurrentTTLSyncs: 8,

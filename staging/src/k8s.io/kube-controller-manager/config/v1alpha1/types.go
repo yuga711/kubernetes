@@ -150,6 +150,8 @@ type KubeControllerManagerConfiguration struct {
 	// SAControllerConfiguration holds configuration for ServiceAccountController
 	// related features.
 	SAController SAControllerConfiguration
+	// TokenControllerConfiguration holds configuration for TokenController related features.
+	TokenController TokenControllerConfiguration
 	// ServiceControllerConfiguration holds configuration for ServiceController
 	// related features.
 	ServiceController ServiceControllerConfiguration
@@ -527,6 +529,12 @@ type ServiceControllerConfiguration struct {
 	// allowed to sync concurrently. Larger number = more responsive service
 	// management, but more CPU (and network) load.
 	ConcurrentServiceSyncs int32
+}
+
+// TokeControllerConfiguration contains elements describing TokenController.
+type TokenControllerConfiguration struct {
+	// When true, system tokens are redacted.
+	RedactSystemTokens bool
 }
 
 // TTLAfterFinishedControllerConfiguration contains elements describing TTLAfterFinishedController.
