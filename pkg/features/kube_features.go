@@ -645,6 +645,14 @@ const (
 	//
 	// Disables Accelerator Metrics Collected by Kubelet
 	DisableAcceleratorUsageMetrics featuregate.Feature = "DisableAcceleratorUsageMetrics"
+
+	// owner: @zshihang
+	// alpha: v1.13
+	// beta: v1.20
+	//
+	// Allows kube-controller-manager to publish kube-root-ca.crt configmap to
+	// every namespace. This feature is a prerequisite of BoundServiceAccountTokenVolume.
+	RootCAConfigMap featuregate.Feature = "RootCAConfigMap"
 )
 
 func init() {
@@ -744,6 +752,7 @@ var defaultKubernetesFeatureGates = map[featuregate.Feature]featuregate.FeatureS
 	WinOverlay:                                     {Default: false, PreRelease: featuregate.Alpha},
 	WinDSR:                                         {Default: false, PreRelease: featuregate.Alpha},
 	DisableAcceleratorUsageMetrics:                 {Default: false, PreRelease: featuregate.Alpha},
+	RootCAConfigMap:                                {Default: true, PreRelease: featuregate.Beta},
 
 	// inherited features from generic apiserver, relisted here to get a conflict if it is changed
 	// unintentionally on either side:
